@@ -4,512 +4,573 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>호그와트 페어틀 메이커</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
+    /* 색상 및 넥타이 패턴 데이터 */
+    :root {
+      /* 기본(DEFAULT - 회색) */
+      --tie-default-1: #3a414d;
+      --tie-default-2: #8a96a8;
+      --border-default: #2d3748;
+      --text-default: #1a202c;
+      --bg-default: #ffffff;
+
+      /* 그리핀도르 */
+      --tie-gryffindor-1: #740001;
+      --tie-gryffindor-2: #d3a625;
+      --border-gryffindor: #740001;
+      --text-gryffindor: #3b0000;
+      --bg-gryffindor: #fffaf8;
+
+      /* 슬리데린 */
+      --tie-slytherin-1: #1a472a;
+      --tie-slytherin-2: #8d99ae;
+      --border-slytherin: #1a472a;
+      --text-slytherin: #0d2516;
+      --bg-slytherin: #f5f9f6;
+
+      /* 래번클로 */
+      --tie-ravenclaw-1: #0e1a40;
+      --tie-ravenclaw-2: #ECEDF0;
+      --border-ravenclaw: #0e1a40;
+      --text-ravenclaw: #070d21;
+      --bg-ravenclaw: #f4f6fb;
+
+      /* 후플푸프 */
+      --tie-hufflepuff-1: #ecb939;
+      --tie-hufflepuff-2: #372e29;
+      --border-hufflepuff: #372e29;
+      --text-hufflepuff: #231d1a;
+      --bg-hufflepuff: #fffdf5;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
     }
 
     body {
+      background-color: #dbe2ef;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      background-color: #1a1a1a;
-      font-family: 'Georgia', 'Noto Serif KR', serif;
+      padding: 20px;
+      gap: 20px;
     }
 
-    /* 메인 양장지 카드 컨테이너 */
-    .card-container {
+    /* 컨트롤 패널 */
+    .control-panel {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 650px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .panel-section {
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 12px;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #4a5568;
+      margin-bottom: 8px;
+    }
+
+    .house-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 6px 12px;
+      border: 1px solid #cbd5e0;
+      background: #f7fafc;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #2b6cb0;
+      color: white;
+      border-color: #2b6cb0;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .input-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .input-box input[type="text"], .input-box input[type="file"] {
+      padding: 6px 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+    }
+
+    .save-btn {
+      padding: 12px;
+      background: #2b6cb0;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .save-btn:hover { background: #2c5282; }
+
+    /* 카드 메인 프레임 */
+    .pair-card {
+      width: 500px;
+      height: 700px;
+      background-color: #fcfcfc;
+      border: 1px solid #cbd5e0;
       position: relative;
-      width: 480px;
-      height: 680px;
-      background: #f0eae1 url('https://www.transparenttextures.com/patterns/parchment.png');
-      border: 2px solid #3c3226;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    /* --------------------------------------------------
-       넥타이 일러스트 (SVG 내장)
-    -------------------------------------------------- */
-    .tie {
-      position: absolute;
-      z-index: 2;
-      pointer-events: none;
-      filter: drop-shadow(3px 5px 6px rgba(0,0,0,0.3));
-    }
-
-    /* 좌상단 그리핀도르 넥타이 */
-    .tie-top-left {
-      top: -10px;
-      left: -15px;
-      width: 140px;
-      transform: rotate(5deg);
-    }
-
-    /* 우하단 슬리데린 넥타이 */
-    .tie-bottom-right {
-      bottom: -10px;
-      right: -15px;
-      width: 150px;
-      transform: rotate(-5deg);
-    }
-
-    /* --------------------------------------------------
-       헤더 영역
-    -------------------------------------------------- */
-    .header {
-      text-align: center;
-      padding-top: 10px;
-      z-index: 3;
-    }
-
-    .pill-label {
-      display: inline-block;
-      background-color: #2b2b2b;
-      color: #fff;
-      font-size: 11px;
-      padding: 3px 14px;
-      border-radius: 12px;
-      margin-bottom: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .main-title {
-      font-size: 20px;
-      font-weight: bold;
-      color: #1f1f1f;
-      letter-spacing: 1.5px;
+    /* 상/하단 기숙사별 독립 영역 */
+    .half-section {
+      position: relative;
+      width: 100%;
+      height: 50%;
+      padding: 35px 40px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      flex-direction: column;
+      transition: background-color 0.3s;
     }
 
-    /* --------------------------------------------------
-       중앙 구분선
-    -------------------------------------------------- */
-    .divider {
+    .half-section.top-half {
+      justify-content: flex-start;
+      align-items: flex-end;
+    }
+
+    .half-section.bottom-half {
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+
+    /* 넥타이 스타일 요소 */
+    .tie-element {
+      position: absolute;
+      width: 90px;
+      height: 450px;
+      pointer-events: none;
+      z-index: 2;
+      box-shadow: 5px 5px 15px rgba(0,0,0,0.25);
+      transition: background 0.3s;
+    }
+
+    /* 입체적 주름/결 그라데이션 */
+    .tie-element::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.3) 100%);
+    }
+
+    /* 상단 좌측 모서리 끝배치 넥타이 (위치 및 길이 보정) */
+    .tie-top-left {
+      top: -120px;
+      left: -90px;
+      transform: rotate(-32deg);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    /* 하단 우측 모서리 끝배치 넥타이 (위치 및 길이 보정) */
+    .tie-bottom-right {
+      bottom: -120px;
+      right: -90px;
+      transform: rotate(-32deg);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    /* 기숙사별 넥타이 스트라이프 패턴 */
+    [data-house="default"] {
+      background-color: var(--bg-default);
+      color: var(--text-default);
+    }
+    [data-house="default"] .tie-element {
+      background: repeating-linear-gradient(-38deg, var(--tie-default-1), var(--tie-default-1) 22px, var(--tie-default-2) 22px, var(--tie-default-2) 30px);
+    }
+    [data-house="default"] .profile-box { border-color: var(--border-default); }
+
+    [data-house="gryffindor"] {
+      background-color: var(--bg-gryffindor);
+      color: var(--text-gryffindor);
+    }
+    [data-house="gryffindor"] .tie-element {
+      background: repeating-linear-gradient(-38deg, var(--tie-gryffindor-1), var(--tie-gryffindor-1) 25px, var(--tie-gryffindor-2) 25px, var(--tie-gryffindor-2) 33px);
+    }
+    [data-house="gryffindor"] .profile-box { border-color: var(--border-gryffindor); }
+
+    [data-house="slytherin"] {
+      background-color: var(--bg-slytherin);
+      color: var(--text-slytherin);
+    }
+    [data-house="slytherin"] .tie-element {
+      background: repeating-linear-gradient(-38deg, var(--tie-slytherin-1), var(--tie-slytherin-1) 25px, var(--tie-slytherin-2) 25px, var(--tie-slytherin-2) 33px);
+    }
+    [data-house="slytherin"] .profile-box { border-color: var(--border-slytherin); }
+
+    [data-house="ravenclaw"] {
+      background-color: var(--bg-ravenclaw);
+      color: var(--text-ravenclaw);
+    }
+    [data-house="ravenclaw"] .tie-element {
+      background: repeating-linear-gradient(-38deg, var(--tie-ravenclaw-1), var(--tie-ravenclaw-1) 25px, var(--tie-ravenclaw-2) 25px, var(--tie-ravenclaw-2) 33px);
+    }
+    [data-house="ravenclaw"] .profile-box { border-color: var(--border-ravenclaw); }
+
+    [data-house="hufflepuff"] {
+      background-color: var(--bg-hufflepuff);
+      color: var(--text-hufflepuff);
+    }
+    [data-house="hufflepuff"] .tie-element {
+      background: repeating-linear-gradient(-38deg, var(--tie-hufflepuff-1), var(--tie-hufflepuff-1) 25px, var(--tie-hufflepuff-2) 25px, var(--tie-hufflepuff-2) 33px);
+    }
+    [data-house="hufflepuff"] .profile-box { border-color: var(--border-hufflepuff); }
+
+    /* 중앙 구분선 */
+    .middle-divider {
       position: absolute;
       top: 50%;
       left: 0;
       width: 100%;
       height: 6px;
-      background: linear-gradient(to bottom, #4a4a4a, #1a1a1a, #4a4a4a);
-      border-top: 1px solid #000;
-      border-bottom: 1px solid #000;
+      background: #4a5568;
       z-index: 5;
       transform: translateY(-50%);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* --------------------------------------------------
-       상단 / 하단 프로필 섹션
-    -------------------------------------------------- */
-    .section {
-      flex: 1;
-      position: relative;
-      padding: 10px 20px;
-      z-index: 3;
-    }
-
-    /* 기숙사 선택 탭 (컨트롤) */
-    .section-title-pill {
-      background-color: #383838;
-      color: #fff;
-      font-size: 11px;
-      padding: 2px 12px;
-      border-radius: 10px;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    .house-selector {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .house-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      border: 2px solid transparent;
-      background-color: #e2dacd;
-      cursor: pointer;
+    /* 프로필 프레임 */
+    .profile-box {
+      width: 150px;
+      height: 150px;
+      border: 4px solid #2d3748;
+      background-color: #edf2f7;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 9px;
-      font-weight: bold;
-      color: #333;
-      transition: all 0.2s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .house-btn.active {
-      border-color: #000;
-      background-color: #fff;
-      box-shadow: 0 0 0 2px #333;
-    }
-
-    .top-section .controls {
-      margin-left: 110px;
-    }
-
-    .bottom-section .controls {
-      margin-left: 20px;
-    }
-
-    /* 이미지 업로드 액자 프레임 */
-    .photo-frame {
-      position: absolute;
-      width: 130px;
-      height: 130px;
-      border: 5px solid #a8a095;
-      outline: 2px solid #5a5248;
-      background-color: #ded8ce;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.15), 3px 4px 8px rgba(0,0,0,0.2);
-      cursor: pointer;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      z-index: 3;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    .photo-frame img {
+    .profile-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .photo-frame .upload-hint {
-      font-size: 11px;
-      color: #666;
-      text-align: center;
-      pointer-events: none;
+    /* 이름 텍스트 */
+    .name-box {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      z-index: 3;
     }
 
-    .top-section .photo-frame {
-      top: 15px;
-      right: 20px;
-    }
+    .top-half .name-box { text-align: right; }
+    .bottom-half .name-box { text-align: left; margin-bottom: 8px; margin-top: 0; }
 
-    .bottom-section .photo-frame {
-      bottom: 25px;
-      left: 20px;
-    }
+    .kr-name { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+    .en-name { font-size: 13px; font-weight: 600; opacity: 0.85; text-transform: uppercase; }
 
-    /* 이름 입력란 */
-    .name-container {
+    /* 자유 배치 스티커 레이어 */
+    #sticker-container {
       position: absolute;
-    }
-
-    .name-input {
-      background: transparent;
-      border: none;
-      border-bottom: 1px dashed #888;
-      font-family: inherit;
-      outline: none;
-      width: 120px;
-    }
-
-    .name-ko {
-      font-size: 16px;
-      font-weight: bold;
-      color: #111;
-    }
-
-    .name-en {
-      font-size: 13px;
-      color: #444;
-      margin-top: 2px;
-    }
-
-    .top-section .name-container {
-      bottom: 20px;
-      right: 20px;
-      text-align: right;
-    }
-
-    .bottom-section .name-container {
-      top: 20px;
-      left: 20px;
-      text-align: left;
-    }
-
-    /* --------------------------------------------------
-       스티커 레이어 및 안내 문구
-    -------------------------------------------------- */
-    .sticker-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 10;
       pointer-events: none;
     }
 
-    .draggable-sticker {
+    .sticker-wrapper {
       position: absolute;
+      display: inline-block;
       pointer-events: auto;
       cursor: move;
-      display: inline-block;
-      padding: 4px;
+      user-select: none;
       border: 1px dashed transparent;
     }
 
-    .draggable-sticker:hover, .draggable-sticker.selected {
-      border-color: #000;
-      background: rgba(255,255,255,0.2);
+    .sticker-wrapper:hover {
+      border-color: #3182ce;
     }
 
-    .draggable-sticker img {
-      width: 60px;
+    .sticker-img {
+      display: block;
+      width: 100px;
       height: auto;
+      pointer-events: none;
+    }
+
+    .sticker-wrapper .del-btn {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: #e53e3e;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .sticker-wrapper:hover .del-btn {
       display: block;
     }
 
-    .sticker-notice {
+    .sticker-wrapper .resize-handle {
       position: absolute;
-      bottom: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 11px;
-      color: #333;
-      background: rgba(255,255,255,0.7);
-      padding: 3px 8px;
-      border-radius: 4px;
-      z-index: 6;
-      white-space: nowrap;
-    }
-
-    /* 스티커 추가 툴바 */
-    .toolbar {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 20;
-    }
-
-    .toolbar-btn {
-      background: #2b2b2b;
-      color: #fff;
-      border: none;
-      padding: 4px 8px;
-      font-size: 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    /* 숨김 파일 입력 */
-    input[type="file"] {
+      bottom: -6px;
+      right: -6px;
+      width: 12px;
+      height: 12px;
+      background: #3182ce;
+      border-radius: 2px;
+      cursor: se-resize;
       display: none;
+    }
+
+    .sticker-wrapper:hover .resize-handle {
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <div class="card-container" id="cardContainer">
-    <!-- 외부 파일추가 버튼 (스티커 업로드용) -->
-    <div class="toolbar">
-      <button class="toolbar-btn" onclick="document.getElementById('stickerInput').click()">+ 스티커 추가</button>
-      <input type="file" id="stickerInput" accept="image/*" onchange="addCustomSticker(event)">
+  <div class="control-panel">
+    
+    <div class="panel-section">
+      <div class="panel-title">1. 상단 기숙사 선택</div>
+      <div class="house-tabs" id="top-tabs">
+        <button class="tab-btn active" onclick="setHouse('top', 'default', this)">기본(회색)</button>
+        <button class="tab-btn" onclick="setHouse('top', 'gryffindor', this)">그리핀도르</button>
+        <button class="tab-btn" onclick="setHouse('top', 'slytherin', this)">슬리데린</button>
+        <button class="tab-btn" onclick="setHouse('top', 'ravenclaw', this)">래번클로</button>
+        <button class="tab-btn" onclick="setHouse('top', 'hufflepuff', this)">후플푸프</button>
+      </div>
     </div>
 
-    <!-- 좌상단 그리핀도르 넥타이 (SVG 그래픽) -->
-    <svg class="tie tie-top-left" viewBox="0 0 100 200">
-      <path d="M20,0 L70,0 L85,40 L65,160 L45,190 L25,160 L5,40 Z" fill="#740001" />
-      <!-- 노란 사선 스트라이프 -->
-      <path d="M15,20 L75,40 M10,50 L80,70 M10,80 L75,100 M10,110 L65,130 M15,140 L55,160" stroke="#D3A625" stroke-width="8" />
-      <circle cx="45" cy="190" r="6" fill="#D3A625" />
-    </svg>
-
-    <!-- 우하단 슬리데린 넥타이 (SVG 그래픽) -->
-    <svg class="tie tie-bottom-right" viewBox="0 0 100 200">
-      <path d="M30,0 L80,0 L95,40 L75,160 L55,190 L35,160 L15,40 Z" fill="#1A472A" />
-      <!-- 은색 사선 스트라이프 -->
-      <path d="M25,20 L85,40 M20,50 L90,70 M20,80 L85,100 M20,110 L75,130 M25,140 L65,160" stroke="#AAAAAA" stroke-width="8" />
-      <circle cx="55" cy="190" r="6" fill="#AAAAAA" />
-    </svg>
-
-    <!-- 상단 타이틀 -->
-    <div class="header">
-      <div class="pill-label">Interface Title</div>
-      <div class="main-title">HOGWARTS ⚡ PAIR MAKER</div>
+    <div class="panel-section">
+      <div class="panel-title">2. 하단 기숙사 선택</div>
+      <div class="house-tabs" id="bottom-tabs">
+        <button class="tab-btn active" onclick="setHouse('bottom', 'default', this)">기본(회색)</button>
+        <button class="tab-btn" onclick="setHouse('bottom', 'gryffindor', this)">그리핀도르</button>
+        <button class="tab-btn" onclick="setHouse('bottom', 'slytherin', this)">슬리데린</button>
+        <button class="tab-btn" onclick="setHouse('bottom', 'ravenclaw', this)">래번클로</button>
+        <button class="tab-btn" onclick="setHouse('bottom', 'hufflepuff', this)">후플푸프</button>
+      </div>
     </div>
 
-    <!-- 상단 프로필 영역 -->
-    <div class="section top-section">
-      <div class="controls">
-        <div class="section-title-pill">Top Profile</div>
-        <div class="house-selector">
-          <button class="house-btn active" onclick="selectHouse(this)">DEFAULT</button>
-          <button class="house-btn" onclick="selectHouse(this)">🦁</button>
-          <button class="house-btn" onclick="selectHouse(this)">🦅</button>
-          <button class="house-btn" onclick="selectHouse(this)">🐍</button>
-          <button class="house-btn" onclick="selectHouse(this)">🦡</button>
+    <div class="panel-section">
+      <div class="panel-title">3. 프로필 정보 입력</div>
+      <div class="input-grid">
+        <div class="input-box">
+          <strong>상단 캐릭터 (우측)</strong>
+          <input type="file" accept="image/*" onchange="loadProfileImg(event, 'img1')">
+          <input type="text" placeholder="한글 이름" oninput="updateText('kr1', this.value)">
+          <input type="text" placeholder="영어 이름" oninput="updateText('en1', this.value)">
+        </div>
+        <div class="input-box">
+          <strong>하단 캐릭터 (좌측)</strong>
+          <input type="file" accept="image/*" onchange="loadProfileImg(event, 'img2')">
+          <input type="text" placeholder="영어 이름" oninput="updateText('en2', this.value)">
+          <input type="text" placeholder="한글 이름" oninput="updateText('kr2', this.value)">
         </div>
       </div>
+    </div>
 
-      <!-- 상단 프레임 (클릭시 사진 업로드) -->
-      <div class="photo-frame" onclick="triggerUpload('topPhotoInput')">
-        <span class="upload-hint" id="topHint">클릭하여<br>사진 업로드</span>
-        <img id="topPhoto" src="" style="display:none;">
+    <div class="panel-section">
+      <div class="panel-title">4. 스티커 추가 (여백 배치)</div>
+      <input type="file" accept="image/*" multiple onchange="addSticker(event)">
+      <span style="font-size: 11px; color: #718096; display: block; margin-top: 4px;">* 스티커를 드래그하여 위치 이동, 오른쪽 하단 점을 당겨 크기 변경 가능</span>
+    </div>
+
+    <button class="save-btn" onclick="downloadTemplate()">완성된 페어틀 저장하기</button>
+  </div>
+
+  <div class="pair-card" id="pairCard">
+    
+    <div id="sticker-container"></div>
+
+    <div class="middle-divider"></div>
+
+    <div class="half-section top-half" id="top-section" data-house="default">
+      <div class="tie-element tie-top-left"></div>
+      <div class="profile-box">
+        <img id="img1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
       </div>
-      <input type="file" id="topPhotoInput" accept="image/*" onchange="loadPhoto(event, 'topPhoto', 'topHint')">
-
-      <!-- 상단 이름 -->
-      <div class="name-container">
-        <input type="text" class="name-input name-ko" value="한글 이름"><br>
-        <input type="text" class="name-input name-en" value="영어 이름">
+      <div class="name-box">
+        <span class="kr-name" id="txt-kr1">한글 이름</span>
+        <span class="en-name" id="txt-en1">ENGLISH NAME</span>
       </div>
     </div>
 
-    <!-- 중앙 구분선 -->
-    <div class="divider"></div>
-
-    <!-- 하단 프로필 영역 -->
-    <div class="section bottom-section">
-      <div class="controls">
-        <div class="section-title-pill">Bottom Profile</div>
-        <div class="house-selector">
-          <button class="house-btn active" onclick="selectHouse(this)">DEFAULT</button>
-          <button class="house-btn" onclick="selectHouse(this)">🦁</button>
-          <button class="house-btn" onclick="selectHouse(this)">🦅</button>
-          <button class="house-btn" onclick="selectHouse(this)">🐍</button>
-          <button class="house-btn" onclick="selectHouse(this)">🦡</button>
-        </div>
+    <div class="half-section bottom-half" id="bottom-section" data-house="default">
+      <div class="tie-element tie-bottom-right"></div>
+      <div class="name-box">
+        <span class="en-name" id="txt-en2">ENGLISH NAME</span>
+        <span class="kr-name" id="txt-kr2">한글 이름</span>
       </div>
-
-      <!-- 하단 이름 -->
-      <div class="name-container">
-        <input type="text" class="name-input name-en" value="영어 이름"><br>
-        <input type="text" class="name-input name-ko" value="한글 이름">
-      </div>
-
-      <!-- 하단 프레임 (클릭시 사진 업로드) -->
-      <div class="photo-frame" onclick="triggerUpload('bottomPhotoInput')">
-        <span class="upload-hint" id="bottomHint">클릭하여<br>사진 업로드</span>
-        <img id="bottomPhoto" src="" style="display:none;">
-      </div>
-      <input type="file" id="bottomPhotoInput" accept="image/*" onchange="loadPhoto(event, 'bottomPhoto', 'bottomHint')">
-    </div>
-
-    <!-- 스티커 배치 레이어 및 안내 문구 -->
-    <div class="sticker-container" id="stickerLayer">
-      <!-- 기본 샘플 스티커 (드래그 가능) -->
-      <div class="draggable-sticker" style="top: 220px; left: 40px;">
-        <img src="https://api.iconify.design/game-icons:snitch.svg?color=%23d3a625" alt="snitch">
-      </div>
-      <div class="draggable-sticker" style="top: 360px; right: 50px;">
-        <img src="https://api.iconify.design/game-icons:wizard-staff.svg?color=%235a3d28" alt="wand">
+      <div class="profile-box">
+        <img id="img2" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
       </div>
     </div>
 
-    <div class="sticker-notice">[스티커 기능]: 여백에 이미지를 자유롭게 업로드하고 움직일 수 있습니다</div>
   </div>
 
   <script>
-    // 1. 기숙사 탭 선택
-    function selectHouse(btn) {
-      const siblings = btn.parentElement.querySelectorAll('.house-btn');
-      siblings.forEach(b => b.classList.remove('active'));
+    function setHouse(position, houseName, btn) {
+      const section = document.getElementById(position + '-section');
+      section.setAttribute('data-house', houseName);
+
+      const tabContainer = document.getElementById(position + '-tabs');
+      const buttons = tabContainer.querySelectorAll('.tab-btn');
+      buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     }
 
-    // 2. 프로필 사진 업로드 처리
-    function triggerUpload(inputId) {
-      document.getElementById(inputId).click();
+    function updateText(id, val) {
+      const target = document.getElementById('txt-' + id);
+      if (id.startsWith('kr')) {
+        target.innerText = val || '한글 이름';
+      } else {
+        target.innerText = val ? val.toUpperCase() : 'ENGLISH NAME';
+      }
     }
 
-    function loadPhoto(event, imgId, hintId) {
-      const file = event.target.files[0];
-      if (file) {
+    function loadProfileImg(event, targetId) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        document.getElementById(targetId).src = reader.result;
+      };
+      if (event.target.files[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    }
+
+    function addSticker(event) {
+      const files = event.target.files;
+      const container = document.getElementById('sticker-container');
+
+      Array.from(files).forEach(file => {
         const reader = new FileReader();
         reader.onload = function(e) {
-          const img = document.getElementById(imgId);
+          const wrapper = document.createElement('div');
+          wrapper.className = 'sticker-wrapper';
+          wrapper.style.left = '180px';
+          wrapper.style.top = '270px';
+
+          const img = document.createElement('img');
           img.src = e.target.result;
-          img.style.display = 'block';
-          document.getElementById(hintId).style.display = 'none';
-        }
+          img.className = 'sticker-img';
+
+          const delBtn = document.createElement('button');
+          delBtn.className = 'del-btn';
+          delBtn.innerText = '×';
+          delBtn.onclick = () => wrapper.remove();
+
+          const resizeHandle = document.createElement('div');
+          resizeHandle.className = 'resize-handle';
+
+          wrapper.appendChild(img);
+          wrapper.appendChild(delBtn);
+          wrapper.appendChild(resizeHandle);
+          container.appendChild(wrapper);
+
+          makeDraggableAndResizable(wrapper, img, resizeHandle);
+        };
         reader.readAsDataURL(file);
-      }
+      });
     }
 
-    // 3. 사용자 지정 스티커 추가
-    function addCustomSticker(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          createStickerElement(e.target.result);
+    function makeDraggableAndResizable(wrapper, img, handle) {
+      let isDragging = false;
+      let isResizing = false;
+      let startX, startY, startLeft, startTop, startWidth;
+
+      wrapper.addEventListener('mousedown', (e) => {
+        if (e.target === handle || e.target.classList.contains('del-btn')) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = wrapper.offsetLeft;
+        startTop = wrapper.offsetTop;
+        e.preventDefault();
+      });
+
+      handle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        startX = e.clientX;
+        startWidth = img.offsetWidth;
+        e.stopPropagation();
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          wrapper.style.left = `${startLeft + dx}px`;
+          wrapper.style.top = `${startTop + dy}px`;
+        } else if (isResizing) {
+          const dx = e.clientX - startX;
+          const newWidth = Math.max(30, startWidth + dx);
+          img.style.width = `${newWidth}px`;
         }
-        reader.readAsDataURL(file);
-      }
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+        isResizing = false;
+      });
     }
 
-    function createStickerElement(src) {
-      const layer = document.getElementById('stickerLayer');
-      const sticker = document.createElement('div');
-      sticker.className = 'draggable-sticker';
-      sticker.style.top = '280px';
-      sticker.style.left = '180px';
-
-      const img = document.createElement('img');
-      img.src = src;
-      sticker.appendChild(img);
-
-      layer.appendChild(sticker);
-      makeDraggable(sticker);
+    function downloadTemplate() {
+      const card = document.getElementById('pairCard');
+      html2canvas(card, { 
+        scale: 2,
+        useCORS: true 
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'hogwarts_pair_card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
     }
-
-    // 4. 스티커 드래그 앤 드롭 구현
-    function makeDraggable(element) {
-      let active = false;
-      let currentX, currentY, initialX, initialY;
-      let xOffset = 0, yOffset = 0;
-
-      element.addEventListener("mousedown", dragStart);
-      document.addEventListener("mouseup", dragEnd);
-      document.addEventListener("mousemove", drag);
-
-      function dragStart(e) {
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
-        if (e.target === element || element.contains(e.target)) {
-          active = true;
-        }
-      }
-
-      function dragEnd() {
-        initialX = currentX;
-        initialY = currentY;
-        active = false;
-      }
-
-      function drag(e) {
-        if (active) {
-          e.preventDefault();
-          currentX = e.clientX - initialX;
-          currentY = e.clientY - initialY;
-          xOffset = currentX;
-          yOffset = currentY;
-
-          element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-        }
-      }
-    }
-
-    // 초기 스티커들에 드래그 이벤트 적용
-    document.querySelectorAll('.draggable-sticker').forEach(makeDraggable);
   </script>
-
 </body>
 </html>
