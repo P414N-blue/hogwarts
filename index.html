@@ -8,7 +8,7 @@
   <style>
     /* 색상 및 넥타이 패턴 데이터 */
     :root {
-      /* 기본(DEFAULT - 회색) */
+      /* 배정 전 */
       --tie-default-1: #3a414d;
       --tie-default-2: #8a96a8;
       --border-default: #2d3748;
@@ -20,21 +20,21 @@
       --tie-gryffindor-2: #d3a625;
       --border-gryffindor: #740001;
       --text-gryffindor: #3b0000;
-      --bg-gryffindor: #fffaf8;
+      --bg-gryffindor: #f4cccc;
 
       /* 슬리데린 */
       --tie-slytherin-1: #1a472a;
       --tie-slytherin-2: #8d99ae;
       --border-slytherin: #1a472a;
       --text-slytherin: #0d2516;
-      --bg-slytherin: #f5f9f6;
+      --bg-slytherin: #e7f4cc;
 
       /* 래번클로 */
       --tie-ravenclaw-1: #0e1a40;
       --tie-ravenclaw-2: #cacaca;
       --border-ravenclaw: #0e1a40;
       --text-ravenclaw: #070d21;
-      --bg-ravenclaw: #f4f6fb;
+      --bg-ravenclaw: #ccccf4;
 
       /* 후플푸프 */
       --tie-hufflepuff-1: #ecb939;
@@ -265,7 +265,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* 프로필 프레임 수정: 드래그 및 확대/축소 설정 */
+    /* 프로필 프레임 설정 */
     .profile-box {
       width: 150px;
       height: 150px;
@@ -291,16 +291,25 @@
       pointer-events: none;
     }
 
-    /* 이름 텍스트 */
+    /* 이름 및 부가설명 텍스트 */
     .name-box {
       margin-top: 8px;
       display: flex;
       flex-direction: column;
       z-index: 3;
+      gap: 2px;
     }
 
     .top-half .name-box { text-align: right; }
     .bottom-half .name-box { text-align: left; margin-bottom: 8px; margin-top: 0; }
+
+    .desc-text {
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.75;
+      letter-spacing: -0.2px;
+      line-height: 1.2;
+    }
 
     .kr-name { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
     .en-name { font-size: 13px; font-weight: 600; opacity: 0.85; text-transform: uppercase; }
@@ -321,6 +330,7 @@
       cursor: move;
       user-select: none;
       border: 1px dashed transparent;
+      transform-origin: center center;
     }
 
     .sticker-wrapper:hover {
@@ -334,6 +344,7 @@
       pointer-events: none;
     }
 
+    /* 삭제 버튼 */
     .sticker-wrapper .del-btn {
       position: absolute;
       top: -10px;
@@ -347,12 +358,10 @@
       font-size: 12px;
       cursor: pointer;
       display: none;
+      z-index: 12;
     }
 
-    .sticker-wrapper:hover .del-btn {
-      display: block;
-    }
-
+    /* 크기 조절 핸들 (우측 하단) */
     .sticker-wrapper .resize-handle {
       position: absolute;
       bottom: -6px;
@@ -363,9 +372,27 @@
       border-radius: 2px;
       cursor: se-resize;
       display: none;
+      z-index: 12;
     }
 
-    .sticker-wrapper:hover .resize-handle {
+    /* 회전 핸들 (상단 중앙) */
+    .sticker-wrapper .rotate-handle {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: #38a169;
+      border-radius: 50%;
+      cursor: grab;
+      display: none;
+      z-index: 12;
+    }
+
+    .sticker-wrapper:hover .del-btn,
+    .sticker-wrapper:hover .resize-handle,
+    .sticker-wrapper:hover .rotate-handle {
       display: block;
     }
   </style>
@@ -377,7 +404,7 @@
     <div class="panel-section">
       <div class="panel-title">1. 상단 기숙사 선택</div>
       <div class="house-tabs" id="top-tabs">
-        <button class="tab-btn active" onclick="setHouse('top', 'default', this)">기본(회색)</button>
+        <button class="tab-btn active" onclick="setHouse('top', 'default', this)">배정 전</button>
         <button class="tab-btn" onclick="setHouse('top', 'gryffindor', this)">그리핀도르</button>
         <button class="tab-btn" onclick="setHouse('top', 'slytherin', this)">슬리데린</button>
         <button class="tab-btn" onclick="setHouse('top', 'ravenclaw', this)">래번클로</button>
@@ -388,7 +415,7 @@
     <div class="panel-section">
       <div class="panel-title">2. 하단 기숙사 선택</div>
       <div class="house-tabs" id="bottom-tabs">
-        <button class="tab-btn active" onclick="setHouse('bottom', 'default', this)">기본(회색)</button>
+        <button class="tab-btn active" onclick="setHouse('bottom', 'default', this)">배정 전</button>
         <button class="tab-btn" onclick="setHouse('bottom', 'gryffindor', this)">그리핀도르</button>
         <button class="tab-btn" onclick="setHouse('bottom', 'slytherin', this)">슬리데린</button>
         <button class="tab-btn" onclick="setHouse('bottom', 'ravenclaw', this)">래번클로</button>
@@ -402,12 +429,14 @@
         <div class="input-box">
           <strong>상단 캐릭터 (우측)</strong>
           <input type="file" accept="image/*" onchange="loadProfileImg(event, 'img1')">
+          <input type="text" placeholder="부가설명" oninput="updateText('desc1', this.value)">
           <input type="text" placeholder="한글 이름" oninput="updateText('kr1', this.value)">
           <input type="text" placeholder="영어 이름" oninput="updateText('en1', this.value)">
         </div>
         <div class="input-box">
           <strong>하단 캐릭터 (좌측)</strong>
           <input type="file" accept="image/*" onchange="loadProfileImg(event, 'img2')">
+          <input type="text" placeholder="부가설명" oninput="updateText('desc2', this.value)">
           <input type="text" placeholder="영어 이름" oninput="updateText('en2', this.value)">
           <input type="text" placeholder="한글 이름" oninput="updateText('kr2', this.value)">
         </div>
@@ -417,7 +446,7 @@
     <div class="panel-section">
       <div class="panel-title">4. 스티커 추가 (여백 배치)</div>
       <input type="file" accept="image/*" multiple onchange="addSticker(event)">
-      <span style="font-size: 11px; color: #718096; display: block; margin-top: 4px;">* 프로필 영역: 클릭 후 드래그로 이동, 마우스 휠로 확대/축소</span>
+      <span style="font-size: 11px; color: #718096; display: block; margin-top: 4px;">* 스티커: 드래그 이동 / 우측 하단 크기 조절 / 상단 초록 점 회전</span>
     </div>
 
     <button class="save-btn" onclick="downloadTemplate()">완성된 페어틀 저장하기</button>
@@ -435,6 +464,7 @@
         <img id="img1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
       </div>
       <div class="name-box">
+        <span class="desc-text" id="txt-desc1"></span>
         <span class="kr-name" id="txt-kr1">한글 이름</span>
         <span class="en-name" id="txt-en1">ENGLISH NAME</span>
       </div>
@@ -443,6 +473,7 @@
     <div class="half-section bottom-half" id="bottom-section" data-house="default">
       <div class="tie-element tie-bottom-right"></div>
       <div class="name-box">
+        <span class="desc-text" id="txt-desc2"></span>
         <span class="en-name" id="txt-en2">ENGLISH NAME</span>
         <span class="kr-name" id="txt-kr2">한글 이름</span>
       </div>
@@ -478,7 +509,9 @@
 
     function updateText(id, val) {
       const target = document.getElementById('txt-' + id);
-      if (id.startsWith('kr')) {
+      if (id.startsWith('desc')) {
+        target.innerText = val || '';
+      } else if (id.startsWith('kr')) {
         target.innerText = val || '한글 이름';
       } else {
         target.innerText = val ? val.toUpperCase() : 'ENGLISH NAME';
@@ -492,7 +525,6 @@
       reader.onload = function() {
         img.src = reader.result;
         img.onload = function() {
-          // 이미지 크기에 맞춰 초기 위치 및 스케일 조정 (박스 중앙 조율)
           const boxSize = 150;
           const scale = Math.max(boxSize / img.naturalWidth, boxSize / img.naturalHeight);
           profileStates[targetId] = {
@@ -511,7 +543,6 @@
       }
     }
 
-    // 프로필 이미지 드래그 및 휠 확대/축소 이벤트 등록
     function initProfileInteractions(boxId, imgId) {
       const box = document.getElementById(boxId);
       let isDragging = false;
@@ -574,24 +605,31 @@
           const resizeHandle = document.createElement('div');
           resizeHandle.className = 'resize-handle';
 
+          const rotateHandle = document.createElement('div');
+          rotateHandle.className = 'rotate-handle';
+
           wrapper.appendChild(img);
           wrapper.appendChild(delBtn);
           wrapper.appendChild(resizeHandle);
+          wrapper.appendChild(rotateHandle);
           container.appendChild(wrapper);
 
-          makeDraggableAndResizable(wrapper, img, resizeHandle);
+          makeStickerInteractive(wrapper, img, resizeHandle, rotateHandle);
         };
         reader.readAsDataURL(file);
       });
     }
 
-    function makeDraggableAndResizable(wrapper, img, handle) {
+    function makeStickerInteractive(wrapper, img, resizeHandle, rotateHandle) {
       let isDragging = false;
       let isResizing = false;
+      let isRotating = false;
       let startX, startY, startLeft, startTop, startWidth;
+      let currentRotation = 0;
 
+      // 드래그 (이동)
       wrapper.addEventListener('mousedown', (e) => {
-        if (e.target === handle || e.target.classList.contains('del-btn')) return;
+        if (e.target === resizeHandle || e.target === rotateHandle || e.target.classList.contains('del-btn')) return;
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
@@ -600,10 +638,18 @@
         e.preventDefault();
       });
 
-      handle.addEventListener('mousedown', (e) => {
+      // 리사이즈 (크기 조절)
+      resizeHandle.addEventListener('mousedown', (e) => {
         isResizing = true;
         startX = e.clientX;
         startWidth = img.offsetWidth;
+        e.stopPropagation();
+        e.preventDefault();
+      });
+
+      // 회전 (기울이기)
+      rotateHandle.addEventListener('mousedown', (e) => {
+        isRotating = true;
         e.stopPropagation();
         e.preventDefault();
       });
@@ -618,12 +664,20 @@
           const dx = e.clientX - startX;
           const newWidth = Math.max(30, startWidth + dx);
           img.style.width = `${newWidth}px`;
+        } else if (isRotating) {
+          const rect = wrapper.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const radians = Math.atan2(e.clientX - centerX, -(e.clientY - centerY));
+          currentRotation = radians * (180 / Math.PI);
+          wrapper.style.transform = `rotate(${currentRotation}deg)`;
         }
       });
 
       window.addEventListener('mouseup', () => {
         isDragging = false;
         isResizing = false;
+        isRotating = false;
       });
     }
 
