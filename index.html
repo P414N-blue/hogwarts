@@ -206,12 +206,14 @@
     }
 
     /* 기숙사별 스트라이프 패턴 */
+    /* 기숙사별 스트라이프 패턴 (html2canvas 호환용 SVG 패턴 적용) */
     [data-house="default"] {
       background-color: var(--bg-default);
       color: var(--text-default);
     }
     [data-house="default"] .tie-element {
-      background: repeating-linear-gradient(-45deg, var(--tie-default-1), var(--tie-default-1) 22px, var(--tie-default-2) 22px, var(--tie-default-2) 30px);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><rect width='30' height='30' fill='%233a414d'/><path d='M-5,5 L5,-5 M0,30 L30,0 M25,35 L35,25' stroke='%238a96a8' stroke-width='8'/></svg>");
+      background-repeat: repeat;
     }
     [data-house="default"] .profile-box { border-color: var(--border-default); }
 
@@ -220,7 +222,8 @@
       color: var(--text-gryffindor);
     }
     [data-house="gryffindor"] .tie-element {
-      background: repeating-linear-gradient(-45deg, var(--tie-gryffindor-1), var(--tie-gryffindor-1) 25px, var(--tie-gryffindor-2) 25px, var(--tie-gryffindor-2) 33px);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23740001'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23d3a625' stroke-width='8'/></svg>");
+      background-repeat: repeat;
     }
     [data-house="gryffindor"] .profile-box { border-color: var(--border-gryffindor); }
 
@@ -229,7 +232,8 @@
       color: var(--text-slytherin);
     }
     [data-house="slytherin"] .tie-element {
-      background: repeating-linear-gradient(-45deg, var(--tie-slytherin-1), var(--tie-slytherin-1) 25px, var(--tie-slytherin-2) 25px, var(--tie-slytherin-2) 33px);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%231a472a'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%238d99ae' stroke-width='8'/></svg>");
+      background-repeat: repeat;
     }
     [data-house="slytherin"] .profile-box { border-color: var(--border-slytherin); }
 
@@ -238,7 +242,8 @@
       color: var(--text-ravenclaw);
     }
     [data-house="ravenclaw"] .tie-element {
-      background: repeating-linear-gradient(-45deg, var(--tie-ravenclaw-1), var(--tie-ravenclaw-1) 25px, var(--tie-ravenclaw-2) 25px, var(--tie-ravenclaw-2) 33px);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%230e1a40'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23cacaca' stroke-width='8'/></svg>");
+      background-repeat: repeat;
     }
     [data-house="ravenclaw"] .profile-box { border-color: var(--border-ravenclaw); }
 
@@ -247,7 +252,8 @@
       color: var(--text-hufflepuff);
     }
     [data-house="hufflepuff"] .tie-element {
-      background: repeating-linear-gradient(-45deg, var(--tie-hufflepuff-1), var(--tie-hufflepuff-1) 25px, var(--tie-hufflepuff-2) 25px, var(--tie-hufflepuff-2) 33px);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23ecb939'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23372e29' stroke-width='8'/></svg>");
+      background-repeat: repeat;
     }
     [data-house="hufflepuff"] .profile-box { border-color: var(--border-hufflepuff); }
 
