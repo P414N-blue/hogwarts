@@ -6,43 +6,56 @@
   <title>호그와트 페어틀 메이커</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* 색상 및 넥타이 패턴 데이터 */
-    :root {
-      /* 배정 전 */
-      --tie-default-1: #3a414d;
-      --tie-default-2: #8a96a8;
-      --border-default: #2d3748;
-      --text-default: #1a202c;
-      --bg-default: #ffffff;
-
-      /* 그리핀도르 */
-      --tie-gryffindor-1: #740001;
-      --tie-gryffindor-2: #d3a625;
-      --border-gryffindor: #740001;
-      --text-gryffindor: #3b0000;
-      --bg-gryffindor: #f4cccc;
-
-      /* 슬리데린 */
-      --tie-slytherin-1: #1a472a;
-      --tie-slytherin-2: #8d99ae;
-      --border-slytherin: #1a472a;
-      --text-slytherin: #0d2516;
-      --bg-slytherin: #e7f4cc;
-
-      /* 래번클로 */
-      --tie-ravenclaw-1: #0e1a40;
-      --tie-ravenclaw-2: #cacaca;
-      --border-ravenclaw: #0e1a40;
-      --text-ravenclaw: #070d21;
-      --bg-ravenclaw: #ccccf4;
-
-      /* 후플푸프 */
-      --tie-hufflepuff-1: #ecb939;
-      --tie-hufflepuff-2: #372e29;
-      --border-hufflepuff: #ecb939;
-      --text-hufflepuff: #231d1a;
-      --bg-hufflepuff: #fffdf5;
+    /* 기숙사별 스트라이프 패턴 (html2canvas 호환용 SVG 패턴 적용) */
+    [data-house="default"] {
+      background-color: var(--bg-default);
+      color: var(--text-default);
     }
+    [data-house="default"] .tie-element {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><rect width='30' height='30' fill='%233a414d'/><path d='M-5,5 L5,-5 M0,30 L30,0 M25,35 L35,25' stroke='%238a96a8' stroke-width='8'/></svg>");
+      background-repeat: repeat;
+    }
+    [data-house="default"] .profile-box { border-color: var(--border-default); }
+
+    [data-house="gryffindor"] {
+      background-color: var(--bg-gryffindor);
+      color: var(--text-gryffindor);
+    }
+    [data-house="gryffindor"] .tie-element {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23740001'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23d3a625' stroke-width='8'/></svg>");
+      background-repeat: repeat;
+    }
+    [data-house="gryffindor"] .profile-box { border-color: var(--border-gryffindor); }
+
+    [data-house="slytherin"] {
+      background-color: var(--bg-slytherin);
+      color: var(--text-slytherin);
+    }
+    [data-house="slytherin"] .tie-element {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%231a472a'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%238d99ae' stroke-width='8'/></svg>");
+      background-repeat: repeat;
+    }
+    [data-house="slytherin"] .profile-box { border-color: var(--border-slytherin); }
+
+    [data-house="ravenclaw"] {
+      background-color: var(--bg-ravenclaw);
+      color: var(--text-ravenclaw);
+    }
+    [data-house="ravenclaw"] .tie-element {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%230e1a40'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23cacaca' stroke-width='8'/></svg>");
+      background-repeat: repeat;
+    }
+    [data-house="ravenclaw"] .profile-box { border-color: var(--border-ravenclaw); }
+
+    [data-house="hufflepuff"] {
+      background-color: var(--bg-hufflepuff);
+      color: var(--text-hufflepuff);
+    }
+    [data-house="hufflepuff"] .tie-element {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23ecb939'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23372e29' stroke-width='8'/></svg>");
+      background-repeat: repeat;
+    }
+    [data-house="hufflepuff"] .profile-box { border-color: var(--border-hufflepuff); }
 
     * {
       box-sizing: border-box;
