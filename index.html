@@ -429,9 +429,9 @@
         <div class="input-box">
           <strong>상단 캐릭터 (우측)</strong>
           <input type="file" accept="image/*" onchange="loadProfileImg(event, 'img1')">
-          <input type="text" placeholder="부가설명" oninput="updateText('desc1', this.value)">
           <input type="text" placeholder="한글 이름" oninput="updateText('kr1', this.value)">
           <input type="text" placeholder="영어 이름" oninput="updateText('en1', this.value)">
+          <input type="text" placeholder="부가설명" oninput="updateText('desc1', this.value)">
         </div>
         <div class="input-box">
           <strong>하단 캐릭터 (좌측)</strong>
@@ -464,16 +464,16 @@
         <img id="img1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
       </div>
       <div class="name-box">
-        <span class="desc-text" id="txt-desc1"></span>
         <span class="kr-name" id="txt-kr1">한글 이름</span>
         <span class="en-name" id="txt-en1">ENGLISH NAME</span>
+        <span class="desc-text" id="txt-desc1">부가 설명</span>
       </div>
     </div>
 
     <div class="half-section bottom-half" id="bottom-section" data-house="default">
       <div class="tie-element tie-bottom-right"></div>
       <div class="name-box">
-        <span class="desc-text" id="txt-desc2"></span>
+        <span class="desc-text" id="txt-desc2">부가 설명</span>
         <span class="en-name" id="txt-en2">ENGLISH NAME</span>
         <span class="kr-name" id="txt-kr2">한글 이름</span>
       </div>
