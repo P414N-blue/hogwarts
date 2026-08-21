@@ -191,56 +191,87 @@
       transform-origin: center;
     }
 
-    /* 기숙사별 스트라이프 패턴 및 방사형 그라데이션 배경 */
-    [data-house="default"] {
-      background: radial-gradient(circle, #ffffff 30%, #e2e8f0 100%);
-      color: var(--text-default);
-    }
-    [data-house="default"] .tie-element {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><rect width='30' height='30' fill='%233a414d'/><path d='M-5,5 L5,-5 M0,30 L30,0 M25,35 L35,25' stroke='%238a96a8' stroke-width='8'/></svg>");
-      background-repeat: repeat;
-    }
-    [data-house="default"] .profile-box { border-color: var(--border-default); }
+    /* 기숙사별 스트라이프 패턴 및 중앙 방향 그라데이션 배경 */
 
-    [data-house="gryffindor"] {
-      background: radial-gradient(circle, #fff5f5 30%, #f4cccc 100%);
-      color: var(--text-gryffindor);
-    }
-    [data-house="gryffindor"] .tie-element {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23740001'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23d3a625' stroke-width='8'/></svg>");
-      background-repeat: repeat;
-    }
-    [data-house="gryffindor"] .profile-box { border-color: var(--border-gryffindor); }
+/* 배정 전 */
+[data-house="default"] {
+  color: var(--text-default);
+}
+.top-half[data-house="default"] {
+  background: linear-gradient(to bottom, #cbd5e0 0%, #ffffff 100%);
+}
+.bottom-half[data-house="default"] {
+  background: linear-gradient(to bottom, #ffffff 0%, #cbd5e0 100%);
+}
+[data-house="default"] .tie-element {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><rect width='30' height='30' fill='%233a414d'/><path d='M-5,5 L5,-5 M0,30 L30,0 M25,35 L35,25' stroke='%238a96a8' stroke-width='8'/></svg>");
+  background-repeat: repeat;
+}
+[data-house="default"] .profile-box { border-color: var(--border-default); }
 
-    [data-house="slytherin"] {
-      background: radial-gradient(circle, #ffffff 30%, #d4edda 100%);
-      color: var(--text-slytherin);
-    }
-    [data-house="slytherin"] .tie-element {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%231a472a'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%238d99ae' stroke-width='8'/></svg>");
-      background-repeat: repeat;
-    }
-    [data-house="slytherin"] .profile-box { border-color: var(--border-slytherin); }
+/* 그리핀도르 */
+[data-house="gryffindor"] {
+  color: var(--text-gryffindor);
+}
+.top-half[data-house="gryffindor"] {
+  background: linear-gradient(to bottom, #f4cccc 0%, #fff5f5 100%);
+}
+.bottom-half[data-house="gryffindor"] {
+  background: linear-gradient(to bottom, #fff5f5 0%, #f4cccc 100%);
+}
+[data-house="gryffindor"] .tie-element {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23740001'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23d3a625' stroke-width='8'/></svg>");
+  background-repeat: repeat;
+}
+[data-house="gryffindor"] .profile-box { border-color: var(--border-gryffindor); }
 
-    [data-house="ravenclaw"] {
-      background: radial-gradient(circle, #ffffff 30%, #d0e1fd 100%);
-      color: var(--text-ravenclaw);
-    }
-    [data-house="ravenclaw"] .tie-element {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%230e1a40'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23cacaca' stroke-width='8'/></svg>");
-      background-repeat: repeat;
-    }
-    [data-house="ravenclaw"] .profile-box { border-color: var(--border-ravenclaw); }
+/* 슬리데린 */
+[data-house="slytherin"] {
+  color: var(--text-slytherin);
+}
+.top-half[data-house="slytherin"] {
+  background: linear-gradient(to bottom, #c3e6cb 0%, #f8fff9 100%);
+}
+.bottom-half[data-house="slytherin"] {
+  background: linear-gradient(to bottom, #f8fff9 0%, #c3e6cb 100%);
+}
+[data-house="slytherin"] .tie-element {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%231a472a'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%238d99ae' stroke-width='8'/></svg>");
+  background-repeat: repeat;
+}
+[data-house="slytherin"] .profile-box { border-color: var(--border-slytherin); }
 
-    [data-house="hufflepuff"] {
-      background: radial-gradient(circle, #ffffff 30%, #fef3c7 100%);
-      color: var(--text-hufflepuff);
-    }
-    [data-house="hufflepuff"] .tie-element {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23ecb939'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23372e29' stroke-width='8'/></svg>");
-      background-repeat: repeat;
-    }
-    [data-house="hufflepuff"] .profile-box { border-color: var(--border-hufflepuff); }
+/* 래번클로 */
+[data-house="ravenclaw"] {
+  color: var(--text-ravenclaw);
+}
+.top-half[data-house="ravenclaw"] {
+  background: linear-gradient(to bottom, #c6dafc 0%, #f4f8ff 100%);
+}
+.bottom-half[data-house="ravenclaw"] {
+  background: linear-gradient(to bottom, #f4f8ff 0%, #c6dafc 100%);
+}
+[data-house="ravenclaw"] .tie-element {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%230e1a40'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23cacaca' stroke-width='8'/></svg>");
+  background-repeat: repeat;
+}
+[data-house="ravenclaw"] .profile-box { border-color: var(--border-ravenclaw); }
+
+/* 후플푸프 */
+[data-house="hufflepuff"] {
+  color: var(--text-hufflepuff);
+}
+.top-half[data-house="hufflepuff"] {
+  background: linear-gradient(to bottom, #fde68a 0%, #fffbeb 100%);
+}
+.bottom-half[data-house="hufflepuff"] {
+  background: linear-gradient(to bottom, #fffbeb 0%, #fde68a 100%);
+}
+[data-house="hufflepuff"] .tie-element {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='33' height='33'><rect width='33' height='33' fill='%23ecb939'/><path d='M-5,5 L5,-5 M0,33 L33,0 M28,38 L38,28' stroke='%23372e29' stroke-width='8'/></svg>");
+  background-repeat: repeat;
+}
+[data-house="hufflepuff"] .profile-box { border-color: var(--border-hufflepuff); }
 
     /* 중앙 구분선 */
     .middle-divider {
