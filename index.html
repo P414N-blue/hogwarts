@@ -9,39 +9,24 @@
     /* 색상 및 넥타이 패턴 데이터 */
     :root {
       /* 배정 전 */
-      --tie-default-1: #3a414d;
-      --tie-default-2: #8a96a8;
       --border-default: #2d3748;
       --text-default: #1a202c;
-      --bg-default: #ffffff;
 
       /* 그리핀도르 */
-      --tie-gryffindor-1: #740001;
-      --tie-gryffindor-2: #d3a625;
       --border-gryffindor: #740001;
       --text-gryffindor: #3b0000;
-      --bg-gryffindor: #f4cccc;
 
       /* 슬리데린 */
-      --tie-slytherin-1: #1a472a;
-      --tie-slytherin-2: #8d99ae;
       --border-slytherin: #1a472a;
       --text-slytherin: #0d2516;
-      --bg-slytherin: #effff0;
 
       /* 래번클로 */
-      --tie-ravenclaw-1: #0e1a40;
-      --tie-ravenclaw-2: #cacaca;
       --border-ravenclaw: #0e1a40;
       --text-ravenclaw: #070d21;
-      --bg-ravenclaw: #e4efff;
 
       /* 후플푸프 */
-      --tie-hufflepuff-1: #ecb939;
-      --tie-hufflepuff-2: #372e29;
       --border-hufflepuff: #ecb939;
       --text-hufflepuff: #231d1a;
-      --bg-hufflepuff: #fffdf5;
     }
 
     * {
@@ -161,7 +146,7 @@
       padding: 35px 40px;
       display: flex;
       flex-direction: column;
-      transition: background-color 0.3s;
+      transition: background 0.3s;
     }
 
     .half-section.top-half {
@@ -206,9 +191,9 @@
       transform-origin: center;
     }
 
-    /* 기숙사별 스트라이프 패턴 (html2canvas 호환용 SVG 패턴 적용) */
+    /* 기숙사별 스트라이프 패턴 및 방사형 그라데이션 배경 */
     [data-house="default"] {
-      background-color: var(--bg-default);
+      background: radial-gradient(circle, #ffffff 30%, #e2e8f0 100%);
       color: var(--text-default);
     }
     [data-house="default"] .tie-element {
@@ -218,7 +203,7 @@
     [data-house="default"] .profile-box { border-color: var(--border-default); }
 
     [data-house="gryffindor"] {
-      background-color: var(--bg-gryffindor);
+      background: radial-gradient(circle, #fff5f5 30%, #f4cccc 100%);
       color: var(--text-gryffindor);
     }
     [data-house="gryffindor"] .tie-element {
@@ -228,7 +213,7 @@
     [data-house="gryffindor"] .profile-box { border-color: var(--border-gryffindor); }
 
     [data-house="slytherin"] {
-      background-color: var(--bg-slytherin);
+      background: radial-gradient(circle, #ffffff 30%, #d4edda 100%);
       color: var(--text-slytherin);
     }
     [data-house="slytherin"] .tie-element {
@@ -238,7 +223,7 @@
     [data-house="slytherin"] .profile-box { border-color: var(--border-slytherin); }
 
     [data-house="ravenclaw"] {
-      background-color: var(--bg-ravenclaw);
+      background: radial-gradient(circle, #ffffff 30%, #d0e1fd 100%);
       color: var(--text-ravenclaw);
     }
     [data-house="ravenclaw"] .tie-element {
@@ -248,7 +233,7 @@
     [data-house="ravenclaw"] .profile-box { border-color: var(--border-ravenclaw); }
 
     [data-house="hufflepuff"] {
-      background-color: var(--bg-hufflepuff);
+      background: radial-gradient(circle, #ffffff 30%, #fef3c7 100%);
       color: var(--text-hufflepuff);
     }
     [data-house="hufflepuff"] .tie-element {
