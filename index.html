@@ -31,7 +31,7 @@
 
       /* 래번클로 */
       --tie-ravenclaw-1: #0e1a40;
-      --tie-ravenclaw-2: #ECEDF0;
+      --tie-ravenclaw-2: #cacaca;
       --border-ravenclaw: #0e1a40;
       --text-ravenclaw: #070d21;
       --bg-ravenclaw: #f4f6fb;
@@ -39,7 +39,7 @@
       /* 후플푸프 */
       --tie-hufflepuff-1: #ecb939;
       --tie-hufflepuff-2: #372e29;
-      --border-hufflepuff: #372e29;
+      --border-hufflepuff: #ecb939;
       --text-hufflepuff: #231d1a;
       --bg-hufflepuff: #fffdf5;
     }
@@ -146,7 +146,7 @@
       background-color: #fcfcfc;
       border: 1px solid #cbd5e0;
       position: relative;
-      overflow: hidden; /* 모서리 밖으로 나가는 띠 잘라내기 */
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -174,21 +174,17 @@
       align-items: flex-start;
     }
 
-    /* ==========================================
-       모서리 대각선 띠(Ribbon) 스타일 설정
-       ========================================== */
+    /* 모서리 대각선 띠 스타일 */
     .tie-element {
       position: absolute;
-      width: 400px; /* 대각선을 충분히 지르도록 넉넉한 길이 */
-      height: 85px;  /* 대각선 띠의 두께 */
+      width: 400px;
+      height: 85px;
       pointer-events: none;
       z-index: 2;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       transition: background 0.3s;
-      clip-path: none;
     }
 
-    /* 입체감 효과 */
     .tie-element::before {
       content: '';
       position: absolute;
@@ -196,7 +192,6 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.25) 100%);
     }
 
-    /* 좌상단 모서리 대각선 띠 배치 */
     .tie-top-left {
       top: 40px;
       left: -130px;
@@ -204,7 +199,6 @@
       transform-origin: center;
     }
 
-    /* 우하단 모서리 대각선 띠 배치 */
     .tie-bottom-right {
       bottom: 40px;
       right: -130px;
@@ -271,24 +265,30 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* 프로필 프레임 */
+    /* 프로필 프레임 수정: 드래그 및 확대/축소 설정 */
     .profile-box {
       width: 150px;
       height: 150px;
       border: 4px solid #2d3748;
       background-color: #edf2f7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative;
       overflow: hidden;
       z-index: 3;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: grab;
+      user-select: none;
+    }
+
+    .profile-box:active {
+      cursor: grabbing;
     }
 
     .profile-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: center center;
+      pointer-events: none;
     }
 
     /* 이름 텍스트 */
@@ -417,7 +417,7 @@
     <div class="panel-section">
       <div class="panel-title">4. 스티커 추가 (여백 배치)</div>
       <input type="file" accept="image/*" multiple onchange="addSticker(event)">
-      <span style="font-size: 11px; color: #718096; display: block; margin-top: 4px;">* 스티커를 드래그하여 위치 이동, 오른쪽 하단 점을 당겨 크기 변경 가능</span>
+      <span style="font-size: 11px; color: #718096; display: block; margin-top: 4px;">* 프로필 영역: 클릭 후 드래그로 이동, 마우스 휠로 확대/축소</span>
     </div>
 
     <button class="save-btn" onclick="downloadTemplate()">완성된 페어틀 저장하기</button>
@@ -431,8 +431,8 @@
 
     <div class="half-section top-half" id="top-section" data-house="default">
       <div class="tie-element tie-top-left"></div>
-      <div class="profile-box">
-        <img id="img1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
+      <div class="profile-box" id="box1">
+        <img id="img1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
       </div>
       <div class="name-box">
         <span class="kr-name" id="txt-kr1">한글 이름</span>
@@ -446,14 +446,26 @@
         <span class="en-name" id="txt-en2">ENGLISH NAME</span>
         <span class="kr-name" id="txt-kr2">한글 이름</span>
       </div>
-      <div class="profile-box">
-        <img id="img2" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
+      <div class="profile-box" id="box2">
+        <img id="img2" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e0' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-5-5L5 21'/></svg>">
       </div>
     </div>
 
   </div>
 
   <script>
+    // 프로필 이미지 조작 상태 저장 객체
+    const profileStates = {
+      img1: { x: 0, y: 0, scale: 1 },
+      img2: { x: 0, y: 0, scale: 1 }
+    };
+
+    function updateTransform(imgId) {
+      const state = profileStates[imgId];
+      const img = document.getElementById(imgId);
+      img.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+    }
+
     function setHouse(position, houseName, btn) {
       const section = document.getElementById(position + '-section');
       section.setAttribute('data-house', houseName);
@@ -475,13 +487,68 @@
 
     function loadProfileImg(event, targetId) {
       const reader = new FileReader();
+      const img = document.getElementById(targetId);
+      
       reader.onload = function() {
-        document.getElementById(targetId).src = reader.result;
+        img.src = reader.result;
+        img.onload = function() {
+          // 이미지 크기에 맞춰 초기 위치 및 스케일 조정 (박스 중앙 조율)
+          const boxSize = 150;
+          const scale = Math.max(boxSize / img.naturalWidth, boxSize / img.naturalHeight);
+          profileStates[targetId] = {
+            x: (boxSize - img.naturalWidth) / 2,
+            y: (boxSize - img.naturalHeight) / 2,
+            scale: scale
+          };
+          img.style.width = img.naturalWidth + 'px';
+          img.style.height = img.naturalHeight + 'px';
+          updateTransform(targetId);
+        }
       };
+
       if (event.target.files[0]) {
         reader.readAsDataURL(event.target.files[0]);
       }
     }
+
+    // 프로필 이미지 드래그 및 휠 확대/축소 이벤트 등록
+    function initProfileInteractions(boxId, imgId) {
+      const box = document.getElementById(boxId);
+      let isDragging = false;
+      let startX, startY;
+
+      box.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - profileStates[imgId].x;
+        startY = e.clientY - profileStates[imgId].y;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        profileStates[imgId].x = e.clientX - startX;
+        profileStates[imgId].y = e.clientY - startY;
+        updateTransform(imgId);
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      box.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomSpeed = 0.08;
+        if (e.deltaY < 0) {
+          profileStates[imgId].scale *= (1 + zoomSpeed);
+        } else {
+          profileStates[imgId].scale /= (1 + zoomSpeed);
+          if (profileStates[imgId].scale < 0.1) profileStates[imgId].scale = 0.1;
+        }
+        updateTransform(imgId);
+      }, { passive: false });
+    }
+
+    initProfileInteractions('box1', 'img1');
+    initProfileInteractions('box2', 'img2');
 
     function addSticker(event) {
       const files = event.target.files;
